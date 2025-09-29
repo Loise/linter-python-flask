@@ -15,7 +15,7 @@ jobs:
         run: flake8 .
     
   test:
-    runs-on: ubunutu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: setup python
