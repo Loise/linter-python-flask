@@ -2,6 +2,10 @@ name: Docker Publish to GHCR
 
 on:
     workflow_dispatch:
+    workflow_run:
+        workflows: ["lint and test flask app"]
+        types:
+            - completed
 
 jobs:
     build-and-push:
