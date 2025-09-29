@@ -1,0 +1,29 @@
+name: lint and test flask app
+on: [push]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        run: pip install -r requirements.txt flake8
+      - name: run flake 8
+        run: flake8 .
+    
+  test:
+    runs-on: ubunutu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        run: pip install -r requirements.txt
+      - name: run tests
+        run: pytest
+    needs: lint
