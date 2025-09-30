@@ -25,9 +25,9 @@ jobs:
       - name: install dependencies
         run: pip install -r requirements.txt
       - name: run tests
-        run: pytest
+        run: pytest -m "not integration"
     needs: lint
-    
+
   docker-test:
     runs-on: ubuntu-latest
     needs: test

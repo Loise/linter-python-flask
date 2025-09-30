@@ -14,4 +14,10 @@ def test_health(client_app):
 def test_hello(client_app):
     res = client_app.get("/hello")
     assert res.status_code == 200
-    
+
+@pytest.mark.integration
+def test_dbtest(client_app):
+    res = client_app.get("/dbtest")
+    assert res.status_code == 200
+    json_data = res.get_json()
+    assert json_data.get("db_connection") == "successful"
