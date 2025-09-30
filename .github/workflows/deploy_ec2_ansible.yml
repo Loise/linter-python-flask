@@ -1,0 +1,33 @@
+name: Deploy to EC2 with docker compose from ansible
+
+on:
+    workflow_dispatch:
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v4
+            
+            - name: install ansible
+              run: sudo apt-get update && sudo apt-get install -y ansible openssh-client
+            
+            - name: Set up ssh key
+              run: |
+                echo "${{secrets.EC2_SSH_KEY}}" > aws/private_key
+                chmod 600 aws/private_key
+            
+            - name: prepare ssh environment
+              run: |
+                mkdir -p ~/.ssh
+                ssh-keyscan -H ${{secrets.EC2_HOST}} >> ~/.ssh/known_hosts
+            
+            - name: run ansible playbook
+              working-directory: aws
+              run: |
+                ansible-playbook -i '${{ secrets.EC2_HOST}},' \
+                 --private-key ../aws/private_key \
+                 --user ${{secrets.EC2_USER}} \
+                 --ssh-common-args='-o ScritchHostKeyChecking=no' \
+                 deploy-docker-compose.yml
