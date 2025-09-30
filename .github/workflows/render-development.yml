@@ -1,0 +1,29 @@
+name: provide render development environment
+
+on:
+    workflow_dispatch
+
+jobs:
+    provide_render:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup terraform
+              uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_version: 1.7.5
+            - name: terraform init
+              run: terraform init
+            - name: terraform plan
+              run: terraform plan -out=tfplan
+              env:
+                TF_VAR_api_key: ${{secrets.API_KEY}}
+                TF_VAR_owner_id: ${{secrets.OWNER_ID}}
+                TF_VAR_environment: "development"
+            - name: terraform apply
+              run: terraform apply -auto-approve tfplan
+              env:
+                TF_VAR_api_key: ${{secrets.API_KEY}}
+                TF_VAR_owner_id: ${{secrets.OWNER_ID}}
+                TF_VAR_environment: "development"
+            
