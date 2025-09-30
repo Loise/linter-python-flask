@@ -1,7 +1,11 @@
-name: provide render development environment
+name: provide aws
 
 on:
     workflow_dispatch:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{secrets.AWS_KEY_ID}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_ACCESS_SECRET}}
 
 jobs:
     provide_render:
@@ -14,16 +18,11 @@ jobs:
                 terraform_version: 1.7.5
             - name: terraform init
               run: terraform init
+              working-directory: ./aws
             - name: terraform plan
               run: terraform plan -out=tfplan
-              env:
-                TF_VAR_api_key: ${{secrets.API_KEY}}
-                TF_VAR_owner_id: ${{secrets.OWNER_ID}}
-                TF_VAR_environment: "development"
+              working-directory: ./aws
             - name: terraform apply
               run: terraform apply -auto-approve tfplan
-              env:
-                TF_VAR_api_key: ${{secrets.API_KEY}}
-                TF_VAR_owner_id: ${{secrets.OWNER_ID}}
-                TF_VAR_environment: "development"
+              working-directory: ./aws
             
