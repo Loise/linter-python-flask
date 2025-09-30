@@ -19,5 +19,5 @@
       become_user: ubuntu
       register: output
     - name: Show results
-      ansible.builting.debug:
+      ansible.builtin.debug:
         var: output
